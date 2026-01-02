@@ -1,7 +1,7 @@
 # ***Aplikasi DeteksiCerdas AI***
 DeteksiCerdas AI adalah aplikasi inovatif yang dirancang untuk mendeteksi kendaraan, baik mobil maupun motor, dengan menggunakan teknologi canggih dari model YOLOv8. Dengan akurasi yang mencapai 95% dan waktu respons kurang dari satu detik, aplikasi ini menyediakan solusi yang cepat dan efisien untuk berbagai kebutuhan analisis jalan raya.
 
-![alt text](?raw=true)
+![alt text](https://github.com/Deonhrf/aplikasi-deteksi-kendaraan/blob/main/public/Tampilan%20menu%20beranda.png?raw=true)
 
 # ***Tujuan Program***
 Aplikasi ini bertujuan untuk memberikan solusi deteksi kendaraan yang akurat, cepat, dan mudah digunakan. DeteksiCerdas AI dapat membantu dalam:
