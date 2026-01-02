@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Beranda - Deteksi Kendaraan{% endblock %}
+
+{% block content %}
+<!-- Hero Section Enhanced -->
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="hero-badge">
+                <i class="fas fa-rocket"></i> AI-Powered Detection
+            </div>
+            <h1 class="hero-title">
+                <span class="title-highlight">Deteksi Kendaraan</span><br>
+            </h1>
+            <p class="hero-subtitle">Teknologi YOLO v8 untuk deteksi akurat dengan akurasi <strong>95%+</strong> dalam waktu <strong>&lt;1 detik</strong></p>
+            
+            
+            <div class="hero-buttons">
+                <a href="{{ url_for('deteksi') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-play"></i> Mulai Deteksi Sekarang
+                </a>
+                <a href="{{ url_for('tentang') }}" class="btn btn-outline btn-lg">
+                    <i class="fas fa-info-circle"></i> Info Lengkap
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Fitur Unggulan</h2>
+            <p>Semua yang Anda butuhkan untuk deteksi kendaraan yang akurat</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <h3>Deteksi Gambar</h3>
+                <p>Upload gambar statis dan dapatkan hasil deteksi instan dengan visualisasi bounding box</p>
+                <div class="feature-badge">Cepat</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI YOLO v8</h3>
+                <p>Model deteksi objek terbaru dengan arsitektur neural network yang optimal</p>
+                <div class="feature-badge">AI</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Proses Cepat</h3>
+                <p>Hasil deteksi dalam waktu kurang dari 1 detik dengan kualitas maksimal</p>
+                <div class="feature-badge">⚡ Cepat</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Analisis Detail</h3>
+                <p>Informasi lengkap tentang setiap kendaraan yang terdeteksi termasuk confidence score</p>
+                <div class="feature-badge">Data</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+
+
+<!-- How It Works -->
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Siap Untuk Memulai?</h2>
+            <p>Deteksi kendaraan Anda sekarang dengan teknologi AI terdepan</p>
+            <a href="{{ url_for('deteksi') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-right"></i> Buka Halaman Deteksi
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

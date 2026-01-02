@@ -1,0 +1,528 @@
+{% extends "base.html" %}
+
+{% block title %}Deteksi - Deteksi Kendaraan{% endblock %}
+
+{% block content %}
+<div class="detection-section">
+    <div class="container">
+        <div class="section-header">
+            <h1>Deteksi Kendaraan</h1>
+            <p>Pilih metode deteksi dan upload file Anda untuk analisis real-time</p>
+        </div>
+
+        <!-- Detection Tabs Navigation -->
+        <div class="detection-tabs-wrapper">
+            <div class="detection-tabs">
+                <button class="tab-btn active" data-tab="image">
+                    <i class="fas fa-image"></i>
+                    <span>Upload Gambar</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Detection Tabs Content -->
+        <div class="detection-content">
+            <!-- Image Upload Tab -->
+            <div class="tab-content active" data-tab="image">
+                <div class="detection-card">
+                    <form action="{{ url_for('detect_image') }}" method="POST" enctype="multipart/form-data" id="imageForm">
+                        <!-- Drop Zone -->
+                        <div class="drop-zone" id="imageDropZone">
+                            <div class="drop-zone-content">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h3>Drag & Drop Gambar di Sini</h3>
+                                <p>atau klik untuk memilih dari perangkat</p>
+                            </div>
+                            <input type="file" name="image" accept="image/*" id="imageInput" class="file-input">
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div class="preview-box" id="imagePreview" style="display: none;">
+                            <div class="preview-header">
+                                <h4>Preview Gambar</h4>
+                                <button type="button" class="btn-remove" onclick="resetImageForm()">✕</button>
+                            </div>
+                            <img id="previewImg" src="" alt="Preview">
+                            <div class="file-info" id="imageFileInfo"></div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="settings-box">
+                            <div class="setting-group">
+                                <label for="confidence-image">
+                                    <i class="fas fa-sliders-h"></i> Confidence Threshold
+                                </label>
+                                <div class="slider-container">
+                                    <input type="range" id="confidence-image" name="confidence" min="0" max="100" value="50" class="slider">
+                                    <span class="confidence-display" id="confidenceImageDisplay">50%</span>
+                                </div>
+                                <small>Semakin tinggi nilai, semakin ketat deteksi</small>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary btn-large" id="detectImageBtn">
+                                <i class="fas fa-search"></i> Deteksi Gambar
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Results -->
+                    <div class="results-box" id="imageResults" style="display: none;">
+                        <h3>Hasil Deteksi</h3>
+                        <div class="result-image-container">
+                            <img id="resultImagePreview" src="" alt="Hasil Deteksi">
+                        </div>
+                        <div class="result-details" id="resultImageDetails"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Upload Tab -->
+            <div class="tab-content" data-tab="video">
+                <div class="detection-card">
+ 
+
+                    <!-- Processing Progress -->
+                    <div class="progress-box" id="videoProgress" style="display: none;">
+                        <h3>Memproses Video...</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p id="progressText">0%</p>
+                    </div>
+
+                    <!-- Results -->
+                </div>
+            </div>
+
+            <!-- Webcam Real-Time Tab -->
+            <div class="tab-content" data-tab="webcam">
+                <div class="detection-card">
+                    <div class="webcam-container">
+                        <!-- Webcam View - Smaller Size -->
+                        <div class="webcam-wrapper">
+                            <div class="webcam-display" id="webcamDisplay">
+                                <video id="webcamVideo" autoplay playsinline></video>
+                                <canvas id="canvasDetection" style="display: none;"></canvas>
+                            </div>
+                            <div class="webcam-status">
+                                <span class="status-indicator" id="statusIndicator"></span>
+                                <span id="statusText">Siap untuk memulai</span>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="settings-box">
+                            <div class="setting-group">
+                                <label for="confidence-webcam">
+                                    <i class="fas fa-sliders-h"></i> Confidence Threshold
+                                </label>
+                                <div class="slider-container">
+                                    <input type="range" id="confidence-webcam" name="confidence" min="0" max="100" value="50" class="slider">
+                                    <span class="confidence-display" id="confidenceWebcamDisplay">50%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="webcam-controls">
+                            <button class="btn btn-success btn-large" id="startWebcamBtn" onclick="startWebcam()">
+                                <i class="fas fa-play"></i> Mulai Deteksi
+                            </button>
+                            <button class="btn btn-danger btn-large" id="stopWebcamBtn" onclick="stopWebcam()" style="display: none;">
+                                <i class="fas fa-stop"></i> Hentikan Deteksi
+                            </button>
+                            <button class="btn btn-secondary btn-large" onclick="captureFrame()">
+                                <i class="fas fa-camera"></i> Ambil Screenshot
+                            </button>
+                        </div>
+
+                        <!-- Live Stats -->
+                        <div class="live-stats" id="liveStats" style="display: none;">
+                            <div class="stat">
+                                <i class="fas fa-car"></i>
+                                <div>
+                                    <div class="stat-label">Mobil</div>
+                                    <div class="stat-value" id="carCount">0</div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-motorcycle"></i>
+                                <div>
+                                    <div class="stat-label">Motor</div>
+                                    <div class="stat-value" id="bikeCount">0</div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <div>
+                                    <div class="stat-label">FPS</div>
+                                    <div class="stat-value" id="fpsCount">30</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <section class="tips-section">
+            <h3><i class="fas fa-lightbulb"></i> Tips untuk Hasil Terbaik</h3>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <i class="fas fa-sun"></i>
+                    <h4>Pencahayaan Baik</h4>
+                    <p>Pastikan pencahayaan cukup untuk visibilitas kendaraan yang optimal</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-eye"></i>
+                    <h4>Kendaraan Terlihat Jelas</h4>
+                    <p>Posisikan kendaraan agar terlihat dengan jelas dalam frame</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-sliders-h"></i>
+                    <h4>Sesuaikan Threshold</h4>
+                    <p>Naikkan confidence untuk deteksi lebih ketat, turunkan untuk lebih sensitif</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+// Tab Navigation
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tabName = this.getAttribute('data-tab');
+        
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        document.querySelector(`.tab-content[data-tab="${tabName}"]`).classList.add('active');
+    });
+});
+
+// Image Upload Handling
+const imageDropZone = document.getElementById('imageDropZone');
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+
+imageDropZone.addEventListener('click', () => imageInput.click());
+imageDropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.add('dragover');
+});
+imageDropZone.addEventListener('dragleave', () => imageDropZone.classList.remove('dragover'));
+imageDropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    imageDropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+        imageInput.files = e.dataTransfer.files;
+        handleImageSelect();
+    }
+});
+
+imageInput.addEventListener('change', handleImageSelect);
+
+function handleImageSelect() {
+    const file = imageInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            imagePreview.style.display = 'block';
+            imageDropZone.style.display = 'none';
+            document.getElementById('imageFileInfo').innerHTML = `
+                <p><strong>${file.name}</strong></p>
+                <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function resetImageForm() {
+    imageInput.value = '';
+    imagePreview.style.display = 'none';
+    imageDropZone.style.display = 'block';
+    document.getElementById('imageResults').style.display = 'none';
+}
+
+// Image Detection Form Submission
+document.getElementById('imageForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const file = imageInput.files[0];
+    const confidence = document.getElementById('confidence-image').value / 100;
+    
+    if (!file) {
+        alert('Pilih gambar terlebih dahulu!');
+        return;
+    }
+    
+    // Show loading state
+    const detectBtn = document.getElementById('detectImageBtn');
+    const originalText = detectBtn.innerHTML;
+    detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+    detectBtn.disabled = true;
+    
+    try {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('confidence', confidence);
+        
+        const response = await fetch('/detect_image', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('imageResults').style.display = 'block';
+            document.getElementById('resultImagePreview').src = data.annotated_image;
+            
+            let resultsHTML = `<div class="detection-stats">
+
+            </div>`;
+            
+            if (data.detections.length > 0) {
+                resultsHTML += '<div class="detection-list"><h4>Objek Terdeteksi:</h4><ul>';
+                data.detections.forEach(det => {
+                    resultsHTML += `
+                        <li class="detection-item">
+                            <strong>${det.class}</strong> - 
+                            <span class="confidence-badge">${(det.confidence * 100).toFixed(1)}%</span>
+                        </li>
+                    `;
+                });
+                resultsHTML += '</ul></div>';
+            }
+            
+            document.getElementById('resultImageDetails').innerHTML = resultsHTML;
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        detectBtn.innerHTML = originalText;
+        detectBtn.disabled = false;
+    }
+});
+
+// Video Upload Handling
+const videoDropZone = document.getElementById('videoDropZone');
+const videoInput = document.getElementById('videoInput');
+const videoPreview = document.getElementById('videoPreview');
+const previewVideo = document.getElementById('previewVideo');
+
+videoDropZone.addEventListener('click', () => videoInput.click());
+videoDropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    videoDropZone.classList.add('dragover');
+});
+videoDropZone.addEventListener('dragleave', () => videoDropZone.classList.remove('dragover'));
+videoDropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    videoDropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+        videoInput.files = e.dataTransfer.files;
+        handleVideoSelect();
+    }
+});
+
+videoInput.addEventListener('change', handleVideoSelect);
+
+function handleVideoSelect() {
+    const file = videoInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewVideo.src = e.target.result;
+            videoPreview.style.display = 'block';
+            videoDropZone.style.display = 'none';
+            document.getElementById('videoFileInfo').innerHTML = `
+                <p><strong>${file.name}</strong></p>
+                <p>${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function resetVideoForm() {
+    videoInput.value = '';
+    videoPreview.style.display = 'none';
+    videoDropZone.style.display = 'block';
+    document.getElementById('videoProgress').style.display = 'none';
+    document.getElementById('videoResults').style.display = 'none';
+}
+
+// Video Detection Form Submission
+document.getElementById('videoForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const file = videoInput.files[0];
+    
+    if (!file) {
+        alert('Pilih video terlebih dahulu!');
+        return;
+    }
+    
+    // Show loading state
+    const detectBtn = document.getElementById('detectVideoBtn');
+    const originalText = detectBtn.innerHTML;
+    detectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+    detectBtn.disabled = true;
+    
+    document.getElementById('videoProgress').style.display = 'block';
+    
+    try {
+        const formData = new FormData();
+        formData.append('video', file);
+        
+        const response = await fetch('/detect_video', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('videoProgress').style.display = 'none';
+            document.getElementById('videoResults').style.display = 'block';
+            
+            const resultsHTML = `
+
+                <div class="video-output">
+                    <h4>Video Hasil Deteksi</h4>
+                    <video controls style="width: 100%; border-radius: 8px;">
+                        <source src="${data.output_video}" type="video/mp4">
+                        Browser Anda tidak mendukung video player
+                    </video>
+                </div>
+            `;
+            
+            document.getElementById('resultVideoDetails').innerHTML = resultsHTML;
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    } finally {
+        detectBtn.innerHTML = originalText;
+        detectBtn.disabled = false;
+    }
+});
+
+// Confidence Slider Updates
+document.getElementById('confidence-image').addEventListener('input', function() {
+    document.getElementById('confidenceImageDisplay').textContent = this.value + '%';
+});
+document.getElementById('confidence-video').addEventListener('input', function() {
+    document.getElementById('confidenceVideoDisplay').textContent = this.value + '%';
+});
+document.getElementById('confidence-webcam').addEventListener('input', function() {
+    document.getElementById('confidenceWebcamDisplay').textContent = this.value + '%';
+});
+
+// Webcam Functions
+let webcamInterval = null;
+
+async function startWebcam() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        document.getElementById('webcamVideo').srcObject = stream;
+        document.getElementById('startWebcamBtn').style.display = 'none';
+        document.getElementById('stopWebcamBtn').style.display = 'block';
+        document.getElementById('liveStats').style.display = 'flex';
+        document.getElementById('statusIndicator').classList.add('active');
+        document.getElementById('statusText').textContent = 'Deteksi sedang berjalan...';
+        
+        // Start real-time detection
+        webcamInterval = setInterval(processWebcamFrame, 500);
+    } catch (error) {
+        alert('Tidak dapat mengakses webcam: ' + error.message);
+    }
+}
+
+function stopWebcam() {
+    const video = document.getElementById('webcamVideo');
+    const stream = video.srcObject;
+    stream.getTracks().forEach(track => track.stop());
+    document.getElementById('startWebcamBtn').style.display = 'block';
+    document.getElementById('stopWebcamBtn').style.display = 'none';
+    document.getElementById('liveStats').style.display = 'none';
+    document.getElementById('statusIndicator').classList.remove('active');
+    document.getElementById('statusText').textContent = 'Siap untuk memulai';
+    
+    if (webcamInterval) {
+        clearInterval(webcamInterval);
+    }
+}
+
+async function processWebcamFrame() {
+    const video = document.getElementById('webcamVideo');
+    const canvas = document.getElementById('canvasDetection');
+    const confidence = document.getElementById('confidence-webcam').value / 100;
+    
+    if (!video.srcObject) return;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    
+    try {
+        const frameData = canvas.toDataURL('image/jpeg');
+        
+        const response = await fetch('/detect_webcam', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                frame: frameData,
+                confidence: confidence
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            const detectionCount = data.detection_count || 0;
+            document.getElementById('liveDetectionCount').textContent = detectionCount;
+            
+            if (detectionCount > 0) {
+                document.getElementById('liveObjectsList').innerHTML = data.detections.map(det => 
+                    `<div class="live-detection-item">${det.class} (${(det.confidence * 100).toFixed(1)}%)</div>`
+                ).join('');
+            }
+        }
+    } catch (error) {
+        console.log('Webcam detection error:', error);
+    }
+}
+
+function captureFrame() {
+    const video = document.getElementById('webcamVideo');
+    const canvas = document.getElementById('canvasDetection');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/jpeg');
+    link.download = 'deteksi_' + new Date().getTime() + '.jpg';
+    link.click();
+}
+</script>
+{% endblock %}

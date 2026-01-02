@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Tentang - Deteksi Kendaraan{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="about-header">
+        <h1>Tentang DeteksiCerdas AI</h1>
+        <p>Aplikasi Deteksi Kendaraan Berbasis Teknologi Artificial Intelligence</p>
+    </div>
+
+    <!-- About Content -->
+    <div class="about-content">
+        <div class="about-card">
+            <h2>🎯 Tujuan Program</h2>
+            <p>Menyediakan solusi deteksi kendaraan yang akurat, cepat, dan mudah digunakan untuk berbagai keperluan monitoring, analisis lalu lintas, dan keamanan jalan raya.</p>
+        </div>
+
+        <div class="about-card">
+            <h2>🚀 Teknologi yang Digunakan</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h3>YOLOv8</h3>
+                    <p>Model deteksi objek real-time terbaru dengan akurasi tinggi</p>
+                </div>
+                <div class="tech-item">
+                    <h3>OpenCV</h3>
+                    <p>Library pemrosesan gambar dan video yang powerful</p>
+                </div>
+                <div class="tech-item">
+                    <h3>Python</h3>
+                    <p>Bahasa pemrograman yang efisien untuk deep learning</p>
+                </div>
+                <div class="tech-item">
+                    <h3>Flask</h3>
+                    <p>Framework web untuk interface yang responsif dan cepat</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <h2>📊 Spesifikasi Model</h2>
+            <table class="specs-table">
+                <tr>
+                    <td>Model</td>
+                    <td>YOLOv8 Nano</td>
+                </tr>
+                <tr>
+                    <td>Akurasi Deteksi</td>
+                    <td>95%+</td>
+                </tr>
+                <tr>
+                    <td>Kelas Deteksi</td>
+                    <td>Mobil, Motor (dan 78 kelas objek lainnya)</td>
+                </tr>
+                <tr>
+                    <td>Waktu Inferensi</td>
+                    <td>&lt;1 detik per gambar</td>
+                </tr>
+                <tr>
+                    <td>Input Format</td>
+                    <td>JPG, PNG, BMP, WEBP</td>
+                </tr>
+                <tr>
+                    <td>Output Format</td>
+                    <td>Gambar dengan bounding box, JSON hasil deteksi</td>
+                </tr>
+                <tr>
+                    <td>Resolusi Input</td>
+                    <td>640x640 pixels (auto resize)</td>
+                </tr>
+                <tr>
+                    <td>GPU Support</td>
+                    <td>CUDA (jika tersedia)</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="about-card">
+            <h2>📚 Cara Penggunaan</h2>
+            <div class="usage-steps">
+                <div class="step-item">
+                    <h4>1. Pilih Menu Deteksi</h4>
+                    <p>Silahkan klik menu Deteksi di navbar</p>
+                </div>
+                <div class="step-item">
+                    <h4>2. Upload File</h4>
+                    <p>Upload gambar untuk proses deteksi kendaraan</p>
+                </div>
+                <div class="step-item">
+                    <h4>3. Atur Parameter</h4>
+                    <p>Sesuaikan confidence threshold sesuai kebutuhan</p>
+                </div>
+                <div class="step-item">
+                    <h4>4. Proses Deteksi</h4>
+                    <p>Klik tombol untuk memulai proses deteksi</p>
+                </div>
+                <div class="step-item">
+                    <h4>5. Lihat Hasil</h4>
+                    <p>Hasil deteksi ditampilkan dengan visualisasi bounding box</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <h2>🔒 Keamanan & Privasi</h2>
+            <ul class="features-list">
+                <li>Semua file yang diupload diproses secara lokal di server</li>
+                <li>File tidak disimpan secara permanen (dihapus setelah deteksi)</li>
+                <li>Data pengguna tidak dibagikan kepada pihak ketiga</li>
+                <li>Enkripsi koneksi HTTPS (recommended)</li>
+            </ul>
+        </div>
+
+        <div class="about-card">
+            <h2>📞 Informasi Tambahan</h2>
+            <p><strong>Versi Aplikasi:</strong> 1.0.0</p>
+            <p><strong>Last Updated:</strong> Desember 2025</p>
+            <p><strong>Framework:</strong> Flask + YOLOv8</p>
+            <p><strong>Developer:</strong> AI Detection Team</p>
+            <p style="margin-top: 20px; color: #7f8c8d;">
+                Untuk pertanyaan atau masukan, silakan hubungi melalui form kontak atau email support.
+            </p>
+        </div>
+    </div>
+    <div class="faq-section">
+        <h2>❓ Pertanyaan Umum</h2>
+        <div class="faq-item">
+            <h3>Berapa ukuran file maksimal yang bisa diupload?</h3>
+            <p>Ukuran maksimal file adalah 10MB untuk gambar</p>
+        </div>
+        <div class="faq-item">
+            <h3>Apa bedanya mobil dan motor di sistem ini?</h3>
+            <p>Model YOLO dapat membedakan kendaraan roda empat (mobil) dan roda dua (motor) berdasarkan fitur visual yang berbeda</p>
+        </div>
+        <div class="faq-item">
+            <h3>Berapa akurasi deteksi aplikasi ini?</h3>
+            <p>Akurasi deteksi mencapai 95%+ tergantung pada kualitas gambar dan kondisi pencahayaan</p>
+        </div>
+        <div class="faq-item">
+            <h3>Apakah bisa digunakan offline?</h3>
+            <p>Ya, aplikasi ini dapat berjalan offline setelah di-install dan dikonfigurasi dengan benar</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .about-header h1 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .about-header p {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+    }
+
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .tech-item {
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .specs-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .specs-table tr {
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .specs-table td {
+        padding: 12px;
+    }
+
+    .specs-table tr:nth-child(odd) {
+        background: #f9f9f9;
+    }
+
+    .features-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .features-list li {
+        padding: 10px 0;
+        padding-left: 30px;
+        position: relative;
+    }
+
+    .features-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .usage-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .step-item {
+        padding: 20px;
+        background: #ecf0f1;
+        border-left: 4px solid #3498db;
+        border-radius: 5px;
+    }
+
+    .faq-section {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 2px solid #e0e0e0;
+    }
+
+    .faq-item {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+    }
+
+    .faq-item h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+
+    .faq-item p {
+        color: #555;
+        margin: 0;
+    }
+</style>
+{% endblock %}
